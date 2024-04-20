@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Display Grid</title>
+    <link rel="stylesheet" href="style.css">
+    <script src='https://cdn.plot.ly/plotly-2.31.1.min.js'></script>
+</head>
+<body>
+    
+
+    
+
+
+    <div class="button-container" style="padding-bottom: 20px;">
+        <button onclick="iterateX()">Iterate X</button>
+        <button onclick="iterateY()">Iterate Y</button>
+        <button onclick="iterateXY()">Iterate Both</button>
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
+
+
+    <div class="grid-container">
+        <div class="grid-item title">Original Image</div>
+        <div class="grid-item title">Modified Image</div>
+        <div class="grid-item">
+            <img id="originalImage" src="#" alt="Original Image" style="display: none;">
+        </div>
+        <div class="grid-item">
+            <canvas id="modifiedImage"></canvas>
+        </div>
+        <div class="grid-item title">Histogram Per Channel</div>
+        <div class="grid-item title">Histogram Per Channel</div>
+        <div class="grid-item histogram" id='original_histogram'></div>
+        <div class="grid-item histogram" id='modified_histogram'></div>
+       
+
+    </div>
+    
+    
+    <script src="script.js"></script>
+</body>
+</html>
