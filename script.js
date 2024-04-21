@@ -1,12 +1,19 @@
 var freq_list = [];  
 var x = [];
 var y = [];
-var bits_per_pixel = 3;
+var bits_per_pixel = 5;
 var global_error = 0.0;
 var global_image = null;  
 var original_image = null;  
 var global_width = 0;
 var global_height = 0;
+
+function updateField() {
+    var slider = document.getElementById('scaleSlider');
+    var display = document.getElementById('displayField');
+    display.value = slider.value;  
+    bits_per_pixel = slider.value
+  }
 
 document.getElementById('imageInput').addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -26,7 +33,6 @@ document.getElementById('imageInput').addEventListener('change', function(event)
             original_image = ctx.getImageData(0, 0, img.width, img.height);
             global_image = Array.from(original_image.data).map(element => parseFloat(element));
             freq_list = get_frequency_table()
-            console.log(freq_list)
             initializeXY();
             update_original_histogram();
            
@@ -105,7 +111,6 @@ function iterateX() {
     for (let i = 0; i < x.length; i++) {
         x[i] = 0.5 * (y[i] + y[i+1]);
     }
-    console.log("Iterate X completed: ", x);
     update();
 }
 
@@ -115,14 +120,24 @@ function iterateY() {
     for (let i = 1; i < y.length-1; i++) {
         y[i] = averageBetween(x[i-1],x[i]);
     }
-    console.log("Iterate Y completed: ", y);
     update();
 }
 
 function iterateXY() {
-    console.log("Starting both X and Y iterations");
     iterateX();
     iterateY();
+}
+
+function iterate10() {
+    for(var i = 0; i<10; i++){
+        iterateXY();
+    }
+}
+
+function iterate100() {
+    for(var i = 0; i<100; i++){
+        iterateXY();
+    }
 }
 
 
