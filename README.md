@@ -1,1 +1,1 @@
-# Lloyd Max Algorithm Implementation + Web Visualizer
+# Lloyd Max Algorithm Implementation + Visualizer
