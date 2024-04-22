@@ -1,7 +1,7 @@
 var freq_list = [];  
 var x = [];
 var y = [];
-var bits_per_pixel = 5;
+var bits_per_pixel = 4;
 var global_error = 0.0;
 var global_image = null;  
 var original_image = null;  
@@ -33,7 +33,13 @@ document.getElementById('imageInput').addEventListener('change', function(event)
             original_image = ctx.getImageData(0, 0, img.width, img.height);
             global_image = Array.from(original_image.data).map(element => parseFloat(element));
             freq_list = get_frequency_table()
-            initializeXY();
+            if (x.length == 0 && y.length == 0){
+                console.log("not loaded")
+                initializeXY();
+            } else {
+                console.log("LOADED X: ", x)
+                update();
+            }
             update_original_histogram();
            
         };
@@ -108,30 +114,42 @@ function initializeXY() {
 
 
 function iterateX() {
-    for (let i = 0; i < x.length; i++) {
-        x[i] = 0.5 * (y[i] + y[i+1]);
-    }
+    iterateX_noupdate();
     update();
 }
 
-function iterateY() {
+function iterateX_noupdate() {
+    for (let i = 0; i < x.length; i++) {
+        x[i] = 0.5 * (y[i] + y[i+1]);
+    }
+}
+
+function iterateY_noupdate() {
     y[0] = averageBetween(0,x[0])
     y[y.length-1] = averageBetween(x[x.length-1],256)
     for (let i = 1; i < y.length-1; i++) {
         y[i] = averageBetween(x[i-1],x[i]);
     }
+}
+
+function iterateY() {
+    iterateY_noupdate();
     update();
 }
 
+
 function iterateXY() {
-    iterateX();
-    iterateY();
+    iterateX_noupdate();
+    iterateY_noupdate();
+    update();
 }
 
 function iterate10() {
     for(var i = 0; i<10; i++){
-        iterateXY();
+        iterateX_noupdate();
+        iterateY_noupdate();
     }
+    update();
 }
 
 function iterate100() {
@@ -161,14 +179,42 @@ function quantizePixel(color){
     return y[y.length-1];
 }
 
+function save_param() {
+    const data = { x, y };
+    console.log("data to be saved: ", data)
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "arrays.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
-
-
+load_param()
+function load_param() {
+    const input = document.getElementById('quantize_input');
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const params = JSON.parse(e.target.result);
+                x = params.x;
+                y = params.y;
+                bits_per_pixel = Math.log(y);
+            };
+            reader.readAsText(file);
+        }
+    });
+}
 
 function update() {
     quantize(); 
     update_error();
-    document.getElementById("error").innerText = "Error: " + global_error;
+    document.getElementById("error").innerText = "MSE: " + global_error;
     var canvas = document.getElementById('modifiedImage');
     var ctx = canvas.getContext('2d');
     var image = new ImageData(new Uint8ClampedArray(global_image.map(element => Math.round(element))),global_width,global_height);

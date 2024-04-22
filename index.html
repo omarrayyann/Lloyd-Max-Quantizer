@@ -6,48 +6,56 @@
     <title>Lloyd Max</title>
     <link rel="stylesheet" href="style.css">
     <script src='https://cdn.plot.ly/plotly-2.31.1.min.js'></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.19.4/dist/css/uikit.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.4/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.4/dist/js/uikit-icons.min.js"></script>
 </head>
-<body>
-    
+<body>  
 
-    
+    <h4 style="margin-top: 0px; margin-bottom: 25px;"> LLoyd Max Quantizer Visualizer</h4>
 
+    <p uk-margin>
+        <div class="js-upload" uk-form-custom>
+            <input type="file" id="imageInput" accept="image/*">
+            <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;">Upload Image</button>
+        </div>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="save_param()">Save Quantization</button>
+        <div class="js-upload" uk-form-custom>
+            <input type="file"  type="file" id="quantize_input">
+            <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;">Load Quantization</button>
+        </div>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="location.reload()">Reset</button>
+        <label class="uk-text-medium" for="scaleSlider">Bits per pixel (0-8):</label>
+        <input type="range" id="scaleSlider" min="0" max="8" value="5" ">
+        <input type="text" oninput="updateField()" id="displayField" value="5">
+    </p>
 
-    <div class="button-container" style="padding-bottom: 20px;">
-        <button onclick="iterateX()">Iterate X</button>
-        <button onclick="iterateY()">Iterate Y</button>
-        <button onclick="iterateXY()">Iterate Both</button>
-        <button onclick="iterate10()">Iterate 10 times</button>
-        <button onclick="location.reload()">Reset</button>
-        <input type="file" id="imageInput" accept="image/*">
-
-        <label for="scaleSlider">Bits per pixel (0-8):</label>
-        <input type="range" id="scaleSlider" min="0" max="8" value="5" oninput="updateField()">
-        <input type="text" id="displayField" value="5">
-        <h3 id="error">Error: 0.0</h3>
-
-
-    </div>
 
 
     <div class="grid-container">
-        <div class="grid-item title">Original Image</div>
-        <div class="grid-item title">Modified Image</div>
         <div class="grid-item">
             <img id="originalImage" src="#" alt="Original Image" style="display: none;">
         </div>
+        <div class="grid-item histogram" id='original_histogram' style="min-height: 300px;"></div>
+
         <div class="grid-item">
             <canvas id="modifiedImage"></canvas>
         </div>
-        <div class="grid-item title">Histogram Per Channel</div>
-        <div class="grid-item title">Histogram Per Channel</div>
-        <div class="grid-item histogram" id='original_histogram'></div>
-        <div class="grid-item histogram" id='modified_histogram'></div>
        
-
+        <div class="grid-item histogram" id='modified_histogram' style="min-height: 300px;"></div>
+       
     </div>
+
+    <p uk-margin>      
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="iterateX()" >Iterate Thresholds</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="iterateY()">Iterate Centroids</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="iterateXY()">Iterate Both</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="iterate10()">Iterate Both x 10</button>
+        <p id="error" style="color: red;">MSE: 0.0</p>
+    </p>
+
+
     
-    
-    <script src="script.js"></script>
+    <script src="script.js" ></script>
 </body>
 </html>
