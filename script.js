@@ -1,18 +1,24 @@
 var freq_list = [];  
 var x = [];
 var y = [];
-var bits_per_pixel = 4;
+var bits_per_pixel = 2;
 var global_error = 0.0;
 var global_image = null;  
 var original_image = null;  
 var global_width = 0;
 var global_height = 0;
 
-function updateField() {
-    var slider = document.getElementById('scaleSlider');
-    var display = document.getElementById('displayField');
-    display.value = slider.value;  
-    bits_per_pixel = slider.value
+
+loadRandomPhoto('lena.jpg')
+x = [70.88796544811558, 117.78547105381112, 174.94581614262995]
+y = [47.50990010847216, 94.26603078775901, 141.30491131986324, 208.58672096539664]
+
+function update_bits(new_bits) {
+    x = []
+    y= [] 
+    bits_per_pixel = new_bits
+    initializeXY();
+    // iterate10();
   }
 
 document.getElementById('imageInput').addEventListener('change', function(event) {
@@ -25,6 +31,10 @@ document.getElementById('imageInput').addEventListener('change', function(event)
         const ctx = modifiedCanvas.getContext('2d');
         const img = new Image();
         img.onload = function() {
+            if (!loaded_param){
+                x = [];
+                y = [];
+            }
             modifiedCanvas.width = img.width;
             modifiedCanvas.height = img.height;
             global_height = img.height;
@@ -33,7 +43,7 @@ document.getElementById('imageInput').addEventListener('change', function(event)
             original_image = ctx.getImageData(0, 0, img.width, img.height);
             global_image = Array.from(original_image.data).map(element => parseFloat(element));
             freq_list = get_frequency_table()
-            if (x.length == 0 && y.length == 0){
+            if (!loaded_param){
                 console.log("not loaded")
                 initializeXY();
             } else {
@@ -167,6 +177,60 @@ function quantize() {
     }
 }
 
+// Function to load a random photo from the sample-photos folder
+function loadRandomPhoto(file_name="") {
+    
+    const folderPath = 'sample-images/';
+    const files = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpeg', '8.png', 'lena.jpg'];
+
+    // Randomly select a photo filename
+    const randomIndex = Math.floor(Math.random() * files.length);
+    var randomPhoto = files[randomIndex];
+
+    if (file_name!=""){
+        randomPhoto = file_name
+    } else {
+        x = []
+        y = []  
+    }
+
+    // Load the selected photo
+    const imgPath = folderPath + randomPhoto;
+    loadImage(imgPath);
+}
+
+// Function to load an image
+function loadImage(imgPath) {
+    const originalImage = document.getElementById('originalImage');
+    const modifiedCanvas = document.getElementById('modifiedImage');
+    const ctx = modifiedCanvas.getContext('2d');
+    const img = new Image();
+    img.onload = function() {
+
+        modifiedCanvas.width = img.width;
+        modifiedCanvas.height = img.height;
+        global_height = img.height;
+        global_width = img.width;
+        ctx.drawImage(img, 0, 0);
+        original_image = ctx.getImageData(0, 0, img.width, img.height);
+        global_image = Array.from(original_image.data).map(element => parseFloat(element));
+        freq_list = get_frequency_table();
+        if (x.length == 0 && y.length == 0) {
+            console.log("not loaded");
+            initializeXY();
+        } else {
+            console.log("LOADED X: ", x);
+            update();
+        }
+        update_original_histogram();
+    };
+    img.src = imgPath;
+
+    originalImage.src = imgPath;
+    originalImage.style.display = 'block';
+}
+
+
 function quantizePixel(color){
     for (let j = 0; j < x.length ; j++) {
         if (color < x[j]) {
@@ -178,6 +242,13 @@ function quantizePixel(color){
     }
     return y[y.length-1];
 }
+// Function to check if a file has an image extension
+function isImageFile(file) {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp'];
+    const ext = path.extname(file).toLowerCase();
+    return imageExtensions.includes(ext);
+}
+
 
 function save_param() {
     const data = { x, y };
@@ -193,8 +264,11 @@ function save_param() {
     URL.revokeObjectURL(url);
 }
 
-load_param()
+
+var loaded_param = false
+
 function load_param() {
+    loaded_param = true
     const input = document.getElementById('quantize_input');
     input.addEventListener('change', function() {
         const file = this.files[0];

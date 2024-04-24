@@ -1,5 +1,4 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
     text-align: center;
@@ -7,18 +6,28 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns of equal size */
-    gap: 10px; /* Space between grid items */
-    margin-bottom: 20px; /* Space below the grid */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    height: 50%;
+    /* background-color: white; */
+    
 }
 
+@media screen and (max-width: 600px) {
+    .grid-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
 .grid-item {
-    padding: 10px;
-    border: 1px solid #ccc; /* Light grey border for each grid item */
+    height: 45vh;
+    /* border: 1px solid #ccc; Light grey border for each grid item */
     overflow: hidden; /* Ensures no overflow from the grid item */
     align-items: center; /* Centers content vertically */
     display: flex;
     justify-content: center; /* Centers content horizontally */
+    background-color: white;
+
 }
 
 .title {
@@ -30,43 +39,11 @@ body {
 }
 
 img, canvas {
-    max-width: 100%; /* Full width of the container but respect max sizes below */
-    max-height: 400px; /* Maximum height for large displays */
+    max-width: 100%; /* Ensure the image doesn't exceed the container's width */
+    max-height: 100%; /* Ensure the image doesn't exceed the container's height *
     width: auto; /* Maintain aspect ratio */
     height: auto; /* Maintain aspect ratio */
     display: block; /* Blocks extra space below the image */
-}
-
-.histogram, canvas {
-    max-width: 100%; /* Full width of the container but respect max sizes below */
-    max-height: 400px; /* Maximum height for large displays */
-    width: auto; /* Maintain aspect ratio */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Blocks extra space below the image */
-    text-align: center;
+    background-color: white;
     
-}
-
-input[type="file"] {
-    margin-top: 20px;
-}
-
-
-.button-container {
-    text-align: center; /* Center the buttons horizontally */
-    margin-top: 20px; /* Space above the buttons */
-}
-
-button {
-    padding: 10px 20px;
-    margin-right: 10px; /* Space between buttons */
-    font-size: 16px; /* Larger font size for better readability */
-    cursor: pointer; /* Cursor indicates clickable items */
-    background-color: #f4f4f4; /* Light gray background */
-    border: 1px solid #ccc; /* Subtle border */
-    border-radius: 5px; /* Rounded corners for aesthetics */
-}
-
-button:hover {
-    background-color: #e9e9e9; /* Slightly darker on hover for feedback */
 }

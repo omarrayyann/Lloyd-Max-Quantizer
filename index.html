@@ -10,45 +10,86 @@
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.4/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.4/dist/js/uikit-icons.min.js"></script>
 </head>
-<body>  
+<body style="background-color: rgb(255, 255, 255);">  
 
-    <h4 style="margin-top: 0px; margin-bottom: 25px;"> LLoyd Max Quantizer Visualizer</h4>
 
+    
     <p uk-margin>
+            <p style="margin-top: 0px; margin-top: 15px;  color: #183A1D; font-size: 20px; font-weight: 100; ;"> LLoyd Max Quantizer Visualizer</p>
+
         <div class="js-upload" uk-form-custom>
             <input type="file" id="imageInput" accept="image/*">
-            <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;">Upload Image</button>
+            <button class="uk-button uk-button-default" style="text-transform: none; margin: 6px; ">Upload Image</button>
         </div>
-        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="save_param()">Save Quantization</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px;" onclick="loadRandomPhoto()">Random Image</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; margin: 6px;" onclick="save_param()">Save Quantization</button>
         <div class="js-upload" uk-form-custom>
             <input type="file"  type="file" id="quantize_input">
-            <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;">Load Quantization</button>
+            <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;  margin: 6px;">Load Quantization</button>
         </div>
-        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; font-size: 16px; margin: 6px; border-width: 2px; border-radius: 3px;" onclick="location.reload()">Reset</button>
-        <label class="uk-text-medium" for="scaleSlider">Bits per pixel (0-8):</label>
-        <input type="range" id="scaleSlider" min="0" max="8" value="5" oninput="updateField()">
-        <input type="text"  id="displayField" value="5">
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none; margin: 6px; " onclick="location.reload()">Reset</button>
+        
+        <button class="uk-button uk-button-default" style="text-transform: none;" type="button">Set bits/pixel</button>
+        <div uk-dropdown style="text-transform: none;">
+            <ul class="uk-nav uk-dropdown-nav">
+                <li class="uk-active"><a onclick="update_bits(1)">1 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(2)">2 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(3)">3 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(4)">4 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(5)">5 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(6)">6 bit</a></li>
+                <li class="uk-active"><a onclick="update_bits(7)">7 bit</a></li>
+            </ul>
+        </div>
     </p>
 
 
+</div>
 
-    <div class="grid-container">
+<div style="width: 80%; margin: 0 auto;">
+
+    <hr>
+
+<p style="text-align: left;">Original Image:</p>
+<div class="grid-container">
+    
         <div class="grid-item">
             <img id="originalImage" src="#" alt="Original Image" style="display: none;">
         </div>
-        <div class="grid-item histogram" id='original_histogram' style="min-height: 300px;"></div>
+        <div  class="grid-item histogram" id='original_histogram' ></div>
 
+        </div>
+
+
+        <hr>
+
+    <div uk-margin>      
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px;" onclick="iterateX()" >Iterate Thresholds</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px;" onclick="iterateY()">Iterate Centroids</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px;" onclick="iterateXY()">Iterate Both</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px;" onclick="iterate10()">Iterate Both x 10</button>
+        <button class="uk-button uk-button-default uk-button-medium" style="text-transform: none;margin: 6px; border-width: 0px; color: rgb(207, 37, 37);"><b id="error">MSE Error: 0.0</b></button>
+    </div>
+
+        
+        <p style="text-align: left; margin-bottom: 5px;">Quantized Image:</p>
+
+        <div class="grid-container" style="margin-top: 20px;">
+
+        
         <div class="grid-item">
             <canvas id="modifiedImage"></canvas>
         </div>
        
-        <div class="grid-item histogram" id='modified_histogram' style="min-height: 300px;"></div>
+        <div class="grid-item histogram" id='modified_histogram'></div>
        
     </div>
 
-   
+
+
 
     
+    </div>
     <script src="script.js" ></script>
 </body>
 </html>
